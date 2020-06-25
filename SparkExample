@@ -1,0 +1,15 @@
+val spark = SparkSession.builder
+                        .master(master = "local[*]")
+                        .appName(name="CoreDemo")
+                        .getOrCreate()
+
+val sc = spark.sparkContext;
+
+val lines = sc.textFile("C:\\Setup\\dataset\\sample.txt")
+val result = lines.flatMap(line => line.split(" "))
+  .map(word => (word, 1))
+  .reduceByKey(_+_)
+  .sortBy(value => value._2, false)
+  .first()
+
+println(result)
